@@ -1,6 +1,8 @@
 import streamlit as st
 import random
 import time
+import streamlit.components.v1 as components
+
 
 st.set_page_config(layout="wide")
 
@@ -67,25 +69,51 @@ for bullet in st.session_state.bullets[:]:
             break
 
 # ---------- DRAW ----------
-st.markdown(
-    f"""
-    <div style="position:relative;width:{WIDTH}px;height:{HEIGHT}px;background:black;">
-        <div style="position:absolute;left:{st.session_state.player_x}px;bottom:20px;
-                    width:30px;height:20px;background:blue;"></div>
+html = f"""
+<div style="position:relative;width:{WIDTH}px;height:{HEIGHT}px;background:black;">
 
-        {''.join(
-            f'<div style="position:absolute;left:{b[0]}px;top:{b[1]}px;width:5px;height:10px;background:green;"></div>'
-            for b in st.session_state.bullets
-        )}
-
-        {''.join(
-            f'<div style="position:absolute;left:{e[0]}px;top:{e[1]}px;width:25px;height:20px;background:red;"></div>'
-            for e in st.session_state.enemies
-        )}
+    <div style="
+        position:absolute;
+        left:{st.session_state.player_x}px;
+        bottom:20px;
+        width:30px;
+        height:20px;
+        background:blue;">
     </div>
-    """,
-    unsafe_allow_html=True
-)
+
+    {''.join(
+        f'''
+        <div style="
+            position:absolute;
+            left:{b[0]}px;
+            top:{b[1]}px;
+            width:5px;
+            height:10px;
+            background:green;">
+        </div>
+        '''
+        for b in st.session_state.bullets
+    )}
+
+    {''.join(
+        f'''
+        <div style="
+            position:absolute;
+            left:{e[0]}px;
+            top:{e[1]}px;
+            width:25px;
+            height:20px;
+            background:red;">
+        </div>
+        '''
+        for e in st.session_state.enemies
+    )}
+
+</div>
+"""
+
+components.html(html, height=HEIGHT + 20)
+
 
 st.write(f"Health: {st.session_state.health} | Score: {st.session_state.score}")
 
