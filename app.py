@@ -2,12 +2,15 @@ import streamlit as st
 import random
 import time
 import streamlit.components.v1 as components
+from streamlit_autorefresh import st_autorefresh
 
 
 st.set_page_config(layout="wide")
 
 WIDTH = 800
 HEIGHT = 500
+# 30 FPS refresh
+st_autorefresh(interval=33, key="game_refresh")
 
 # ---------- INIT STATE ----------
 if "player_x" not in st.session_state:
@@ -25,7 +28,7 @@ c1, c2, c3 = st.columns(3)
 
 with c1:
     if st.button("Left"):
-        st.session_state.player_x -= 30
+        st.session_state.player_x -= MOVE_STEP
 
 with c2:
     if st.button("Shoot"):
@@ -35,7 +38,7 @@ with c2:
 
 with c3:
     if st.button("Right"):
-        st.session_state.player_x += 30
+        st.session_state.player_x += MOVE_STEP
 
 st.session_state.player_x = max(0, min(WIDTH - 30, st.session_state.player_x))
 
@@ -48,14 +51,14 @@ if time.time() - st.session_state.last_spawn > 1:
 
 # ---------- UPDATE BULLETS ----------
 for bullet in st.session_state.bullets:
-    bullet[1] -= 15
+    bullet[1] -= 25
 st.session_state.bullets = [
     b for b in st.session_state.bullets if b[1] > 0
 ]
 
 # ---------- UPDATE ENEMIES ----------
 for enemy in st.session_state.enemies:
-    enemy[1] += 5
+    enemy[1] += 8
     if enemy[1] > HEIGHT:
         st.session_state.health -= 10
 
